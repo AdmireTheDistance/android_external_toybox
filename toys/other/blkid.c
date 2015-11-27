@@ -133,7 +133,7 @@ static void do_blkid(int fd, char *name)
   // output for blkid
   printf("%s:",name);
 
-  if (fstypes[i].label_len)
+  if (fstypes[i].label_len && valid_label(i, off))
     printf(" LABEL=\"%.*s\"", fstypes[i].label_len,
            toybuf+fstypes[i].label_off-off);
 
