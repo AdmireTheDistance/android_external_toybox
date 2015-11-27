@@ -195,7 +195,7 @@ static void mount_filesystem(char *dev, char *dir, char *type,
       printf("try '%s' type '%s' on '%s'\n", dev, type, dir);
     for (;;) {
       rc = mount(dev, dir, type, flags, opts);
-      if ((rc != EACCESS && rc != EROFS && rc != -1) || (flags & MS_RDONLY))
+      if ((rc != EACCES && rc != EROFS && rc != -1) || (flags & MS_RDONLY))
         break;
       if ((rc == EROFS || rc == -1) && fd == -1) {
         if (-1 != (fd = open(dev, O_RDONLY))) {
