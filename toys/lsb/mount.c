@@ -18,13 +18,13 @@ config MOUNT
     Mount new filesystem(s) on directories. With no arguments, display existing
     mounts.
 
-    -a	mount all entries in /etc/fstab (with -t, only entries of that TYPE)
-    -O	only mount -a entries that have this option
-    -f	fake it (don't actually mount)
-    -r	read only (same as -o ro)
-    -w	read/write (default, same as -o rw)
-    -t	specify filesystem type
-    -v	verbose
+    -a  mount all entries in /etc/fstab (with -t, only entries of that TYPE)
+    -O  only mount -a entries that have this option
+    -f  fake it (don't actually mount)
+    -r  read only (same as -o ro)
+    -w  read/write (default, same as -o rw)
+    -t  specify filesystem type
+    -v  verbose
 
     OPTIONS is a comma separated list of options, which can also be supplied
     as --longopts.
@@ -194,10 +194,10 @@ static void mount_filesystem(char *dev, char *dir, char *type,
     if (toys.optflags & FLAG_v)
       printf("try '%s' type '%s' on '%s'\n", dev, type, dir);
     for (;;) {
+      errno = 0;
       rc = mount(dev, dir, type, flags, opts);
-      if ((rc != EACCES && rc != EROFS && rc != -1) || (flags & MS_RDONLY))
-        break;
-      if ((rc == EROFS || rc == -1) && fd == -1) {
+      if ((errno != EACCES && errno != EROFS) || (flags & MS_RDONLY)) break;
+      if ((errno == EACCES || errno == EROFS) && fd == -1) {
         if (-1 != (fd = open(dev, O_RDONLY))) {
           ioctl(fd, BLKROSET, &ro);
           close(fd);
